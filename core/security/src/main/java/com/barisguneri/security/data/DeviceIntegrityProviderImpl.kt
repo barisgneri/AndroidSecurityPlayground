@@ -1,7 +1,7 @@
 package com.barisguneri.security.data
 
 import android.os.Build
-import com.barisguneri.security.domain.DeviceIntegrityProvider
+import com.barisguneri.security.domain.repository.DeviceIntegrityProvider
 import java.io.File
 import javax.inject.Inject
 

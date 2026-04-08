@@ -1,4 +1,4 @@
-package com.barisguneri.security.domain
+package com.barisguneri.security.domain.repository
 
 interface DeviceIntegrityProvider {
     fun isDeviceRooted(): Boolean

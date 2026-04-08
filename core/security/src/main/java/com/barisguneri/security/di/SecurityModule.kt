@@ -1,7 +1,7 @@
 package com.barisguneri.security.di
 
 import com.barisguneri.security.data.DeviceIntegrityProviderImpl
-import com.barisguneri.security.domain.DeviceIntegrityProvider
+import com.barisguneri.security.domain.repository.DeviceIntegrityProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

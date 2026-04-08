@@ -43,6 +43,12 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":core:security"))
+    //hilt
     implementation(libs.android.hilt)
     ksp(libs.hilt.compiler)
+
+    //work manager
+    implementation(libs.androidx.work)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
 }

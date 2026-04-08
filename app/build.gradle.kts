@@ -57,8 +57,16 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(project(":core:security"))
 
+    implementation(project(":core:security"))
+    implementation(project(":feature:scanner"))
+
+    //hilt
     implementation(libs.android.hilt)
     ksp(libs.hilt.compiler)
+
+    //work manager
+    implementation(libs.androidx.work)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
 }

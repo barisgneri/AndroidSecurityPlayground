@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.barisguneri.scanner.worker.MalwareScanWorker
 import com.barisguneri.security.domain.repository.DeviceIntegrityProvider
 import com.barisguneri.securityplayground.presentation.ui.theme.AndroidSecurityPlaygroundTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +27,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        startBackgroundSecurityScan()
         enableEdgeToEdge()
         setContent {
             AndroidSecurityPlaygroundTheme {
@@ -36,8 +40,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
+    private fun startBackgroundSecurityScan() {
+        // İstersen OneTimeWorkRequestBuilder yerine periyodik (PeriodicWorkRequestBuilder) da yapabilirsin.
+        val workRequest = OneTimeWorkRequestBuilder<MalwareScanWorker>().build()
+        WorkManager.getInstance(this).enqueue(workRequest)
+    }
+
+}
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(

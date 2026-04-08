@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Bu izin play store tarafından sadece antivrüs programı benzeri uygulamalar için veriliyor.
+     Ancak gerçek bir bankacılık veya fintech uygulamasında Google Play politikaları gereği bu izni alınamaz.
+     Orada mimariyi, Manifest içinde <queries> bloğu ile blacklist paketleri arayacak şekilde ve
+     Play Integrity API ile destekleyecek şekilde kurmak gerekir -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".SecurityApp"
         android:allowBackup="true"
@@ -12,6 +21,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSecurityPlayground">
+        <!-- Workmanager kendini otomatik başlatmaya çalışıyor
+        bu da benim kendi oluşturduğum SecurityApp ten önce oluyor bu sefer work manager hata veriyor -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"

@@ -1,15 +1,21 @@
-package com.barisguneri.securityplayground.security
+package com.barisguneri.security.data
 
 import android.os.Build
+import com.barisguneri.security.domain.DeviceIntegrityProvider
 import java.io.File
+import javax.inject.Inject
 
-class DeviceIntegrityProviderImpl : DeviceIntegrityProvider {
+class DeviceIntegrityProviderImpl @Inject constructor() : DeviceIntegrityProvider {
 
     override fun isDeviceRooted(): Boolean {
         return checkTestKeys() || checkRootFiles() || checkSuCommand()
     }
 
     override fun isEmulator(): Boolean {
+        return checkBasicBuildProperties() || checkAdvancedEmulatorFiles() || checkEmulatorProperties()
+    }
+
+    private fun checkBasicBuildProperties(): Boolean {
         return (Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
                 || Build.MODEL.contains("google_sdk")
@@ -18,6 +24,30 @@ class DeviceIntegrityProviderImpl : DeviceIntegrityProvider {
                 || Build.MANUFACTURER.contains("Genymotion")
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || "google_sdk" == Build.PRODUCT)
+    }
+
+    private fun checkAdvancedEmulatorFiles(): Boolean {
+        val qemuFiles = arrayOf(
+            "/dev/socket/qemud",
+            "/dev/qemu_pipe",
+            "/system/lib/libc_malloc_debug_qemu.so",
+            "/sys/qemu_trace",
+            "/system/bin/qemu-props"
+        )
+        for (path in qemuFiles) {
+            if (File(path).exists()) return true
+        }
+        return false
+    }
+
+    private fun checkEmulatorProperties(): Boolean {
+        return try {
+            val process = Runtime.getRuntime().exec("getprop ro.kernel.qemu")
+            val output = process.inputStream.bufferedReader().use { it.readText() }.trim()
+            output == "1"
+        } catch (e: Exception) {
+            false
+        }
     }
 
     // --- ROOT DETECTION ---

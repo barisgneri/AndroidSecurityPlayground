@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidSecurity-Playground"
 include(":app")
- 
+include(":core:security")
